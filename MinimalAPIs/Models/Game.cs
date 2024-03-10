@@ -1,4 +1,6 @@
-﻿namespace MinimalAPIs.Models
+﻿using System.Text.Json.Serialization;
+
+namespace MinimalAPIs.Models
 {
     public class Game
     {
@@ -9,8 +11,9 @@
         public string? Picture { get; set; }
         public DateTime PurchaseDate { get; set; }
         public int Stock {  get; set; }
-
         public int GeneroId { get; set; }
+
+        [JsonIgnore]
         public Genero? Genero { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Carter;
+﻿using AutoMapper;
+using Carter;
 using Carter.OpenApi;
 using Microsoft.EntityFrameworkCore;
 using MinimalAPIs.Context;
@@ -8,6 +9,12 @@ namespace MinimalAPIs.Endpoints
 {
     public class GeneroEndpoints : CarterModule
     {
+        private readonly IMapper _mapper;
+
+        public GeneroEndpoints(IMapper mapper)
+        {
+            _mapper = mapper;
+        }
         public override async void AddRoutes(IEndpointRouteBuilder app)
         {
             //app.MapGet("/TESTE", () =>
@@ -17,10 +24,12 @@ namespace MinimalAPIs.Endpoints
             //.IncludeInOpenApi()
             //.RequireAuthorization();
 
+            // GET
             app.MapGet("/generos", async (AppDbContext db) => await db.Generos.ToListAsync())
               .IncludeInOpenApi()
                .WithTags("Gêneros");
 
+            // GET BY ID
             app.MapGet("/generos/{id:int}", async (int id, AppDbContext db) =>
             {
                 return await db.Generos.FindAsync(id)
@@ -30,7 +39,8 @@ namespace MinimalAPIs.Endpoints
 
             }).IncludeInOpenApi()
                 .WithTags("Gêneros");
-
+            
+            // POST
             app.MapPost("/genero", async (Genero genero, AppDbContext db) =>
             {
                 db.Generos.Add(genero);
@@ -40,28 +50,30 @@ namespace MinimalAPIs.Endpoints
             }).IncludeInOpenApi()
             .WithTags("Gêneros");
 
-           app.MapPut("/generos/{id:int}", async (int id, Genero genero, AppDbContext db) =>
-           {
-               if(genero.GeneroId != id)
-               {
-                   return Results.BadRequest();
-               }
+            // PUT
+            app.MapPut("/generos/{id:int}", async (int id, Genero generoInput, AppDbContext db) =>
+            {
+                if(generoInput.GeneroId != id)
+                {
+                    return Results.BadRequest();
+                }
 
-               var generoDb = await db.Generos.FindAsync(id);
+                var generoDb = await db.Generos.FindAsync(id);
 
-               if(generoDb != null)
-               {
-                   generoDb.Name = genero.Name;
-                   generoDb.Description = genero.Description;
-                   await db.SaveChangesAsync();
-                   return Results.Ok(generoDb);
-               }
-               else
-                   return Results.NotFound();
+                if(generoDb != null)
+                {
+                    generoDb = _mapper.Map(generoInput, generoDb);
 
-           }).IncludeInOpenApi()
+                    await db.SaveChangesAsync();
+                    return Results.Ok(generoDb);
+                }
+                else
+                    return Results.NotFound();
+
+            }).IncludeInOpenApi()
             .WithTags("Gêneros");
 
+            // DELETE
             app.MapDelete("/generos/{id:int}", async (int id, AppDbContext db) =>
             {
                 var generoDb = await db.Generos.FindAsync(id);
