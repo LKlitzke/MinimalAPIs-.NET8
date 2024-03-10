@@ -12,12 +12,12 @@ namespace MinimalAPIs.Models
 
         public override void AddRoutes(IEndpointRouteBuilder app)
         {
-            app.MapGet("/", () =>
-            {
-                return "Hello Carter!";
-            })
-            .IncludeInOpenApi()
-            .RequireAuthorization();
+            //app.MapGet("/", () =>
+            //{
+            //    return "Hello Carter!";
+            //})
+            //.IncludeInOpenApi()
+            //.RequireAuthorization();
         }
     }
 }

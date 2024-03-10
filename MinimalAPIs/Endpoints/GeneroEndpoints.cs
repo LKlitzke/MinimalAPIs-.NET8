@@ -26,8 +26,9 @@ namespace MinimalAPIs.Endpoints
 
             // GET
             app.MapGet("/generos", async (AppDbContext db) => await db.Generos.ToListAsync())
-              .IncludeInOpenApi()
-               .WithTags("Gêneros");
+                .IncludeInOpenApi()
+                .RequireAuthorization()
+                .WithTags("Gêneros");
 
             // GET BY ID
             app.MapGet("/generos/{id:int}", async (int id, AppDbContext db) =>
