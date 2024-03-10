@@ -14,6 +14,7 @@ This .NET 8 WebAPI utilizes Minimal APIs to create a simple yet clean endpoint s
 - Entity Framework Core
 - AutoMapper
 - Carter Module
+- JWT Authorization
 - SQL Server
 - Swagger
 
@@ -35,6 +36,17 @@ Then, simply run the project (pay attention to what folder you're in!):
 dotnet run --project ./MinimalAPIs/MinimalAPIs.csproj
 ```
 
-## :memo: Licence
+## Testing endpoints
+To be able to run endpoints that require JWT authorization, you'll have to run '/login' endpoint first OR disable .RequireAuthorization() extension method in the endpoints file. The default login and password are:
+```
+{
+  "userName": "lucas.silva",
+  "password": "teste123#"
+}
+```
+You can also change this setting in LoginEndpoint.cs.
 
+Then copy the return token, click "Authorize" button and type in the value field the following: 'Bearer (token)'. All endpoints should now be available to execute!
+
+## :memo: Licence
 This project is under MIT License.
